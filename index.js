@@ -30,7 +30,7 @@ const lookup_score = async (id) => {
         throw new Error('This entry is not available in the database');
     }
 
-    return results[0].score;
+    return results[0].scores;
 }
 
 const acss = async (str, alphabet = 9, debug = false) => {
@@ -76,14 +76,9 @@ const main = async () => {
 
     await acss("123sd", 6, true)
     await acss("eghwert", 9, true)
-    await acss("weethsn", 9, true)
+    await acss("weethsnasdv", 9, true)
 
     client.close();
 }
 
 main();
-
-
-
-// Does not work with truncated data
-// acss("werrwethsn", 9, true)
