@@ -2,7 +2,13 @@
 // var acss_data = require('./data/acss_data.json');
 
 // Truncated data set with up to 7 characters (for testing)
-var acss_data = require('./data/acss_data_truncated.json');
+// const acss_data = require('./data/acss_data_truncated.json');
+
+require('dotenv').config()
+const MongoClient = require('mongodb').MongoClient;
+
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.zvszj.mongodb.net/acss?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true });
 
 const normalize_string = (str) => {
     const elements = str.split('');
@@ -13,7 +19,16 @@ const normalize_string = (str) => {
     return indices.join('');
 }
 
-const acss = (str, alphabet = 9, debug = false) => {
+const lookup_score = async (id) => {
+    const cursor = client.db('acss')
+        .collection('scores')
+        .find({ "id": id });
+
+    const results = await cursor.toArray();
+    return results[0].score;
+}
+
+const acss = async (str, alphabet = 9, debug = false) => {
     const allowed_alphabets = [2, 4, 5, 6, 9];
 
     if (typeof str !== 'string') {
@@ -27,7 +42,8 @@ const acss = (str, alphabet = 9, debug = false) => {
     }
     const string = normalize_string(str);
     const index = allowed_alphabets.indexOf(alphabet);
-    const complexity = acss_data[string][index];
+    const scores = await lookup_score(string);
+    const complexity = scores[index];
 
     if (String(complexity) === 'NA') {
         throw new Error('ACSS is not available. Try increasing the alphabet.');
@@ -40,7 +56,7 @@ const acss = (str, alphabet = 9, debug = false) => {
             { "String": str },
             { "Normalized string": string },
             { "Alphabet index": index },
-            { "ACSS lookup": acss_data[string] },
+            { "DB ACSS lookup": scores },
             { "Complexity value": complexity },
             { "Algorithmic probability": probability }
         ]);
@@ -50,11 +66,19 @@ const acss = (str, alphabet = 9, debug = false) => {
 }
 
 
+const main = async () => {
+    await client.connect();
+
+    await acss("123sd", 6, true)
+    await acss("eghwert", 9, true)
+    await acss("weethsn", 9, true)
+
+    client.close();
+}
+
+main();
 
 
-acss("123sd", 9, true)
-acss("eghwert", 9, true)
-acss("weethsn", 9, true)
 
 // Does not work with truncated data
 // acss("werrwethsn", 9, true)

@@ -1,2 +1,7 @@
+node_modules
+.env
+R/.Rhistory
+
 # Remove the complete data file due to the large size
 */acss_data.json
+*/acss_data.csv
