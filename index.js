@@ -34,8 +34,8 @@ const acss = async (str, alphabet = 9, debug = false) => {
     if (typeof str !== 'string') {
         throw new Error('Input is not a string');
     }
-    if (str.length > 10) {
-        throw new Error('String is too long (more than 10 characters)');
+    if (str.length > 12) {
+        throw new Error('String is too long (more than 12 characters)');
     }
     if (!allowed_alphabets.includes(alphabet)) {
         throw new Error('Alphabet must be one of 2, 4, 5, 6 or 9');
