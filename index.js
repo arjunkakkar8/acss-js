@@ -22,9 +22,14 @@ const normalize_string = (str) => {
 const lookup_score = async (id) => {
     const cursor = client.db('acss')
         .collection('scores')
-        .find({ "id": id });
+        .find({ "_id": id });
 
     const results = await cursor.toArray();
+
+    if (results.length === 0) {
+        throw new Error('This entry is not available in the database');
+    }
+
     return results[0].score;
 }
 

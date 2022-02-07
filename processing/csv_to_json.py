@@ -15,7 +15,7 @@ def make_json(csvFilePath, jsonFilePath):
         # Convert each row into a dictionary
         # and add it to data
         for rows in csvReader:
-            entry = { "id": rows['id'], "scores": [rows['K.2'], rows['K.4'], rows['K.5'], rows['K.6'], rows['K.9']]}
+            entry = { "_id": rows['_id'], "scores": [rows['K.2'], rows['K.4'], rows['K.5'], rows['K.6'], rows['K.9']]}
             data.append(entry)
  
     # Open a json writer, and use the json.dumps()
@@ -25,8 +25,8 @@ def make_json(csvFilePath, jsonFilePath):
          
 
 
-csvFilePath = r'acss_data.csv'
-jsonFilePath = r'acss_data.json'
+csvFilePath = r'data/acss_data.csv'
+jsonFilePath = r'data/acss_data.json'
  
  
 make_json(csvFilePath, jsonFilePath)
